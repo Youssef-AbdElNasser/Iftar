@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Ramadan Kareem 🌙</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+
+body{
+height:100vh;
+overflow:hidden;
+background:radial-gradient(circle at bottom,#0b1d3a,#000814 70%);
+color:white;
+touch-action:pan-y; /* بيسمح بالتمرير الرأسي فقط ويمنع الأفقي (السوايب) */
+}
+
+/* النجوم */
+.star{
+position:absolute;
+width:3px;
+height:3px;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:0.2;}
+to{opacity:1;}
+}
+
+/* الصفحات */
+.page{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+transition:1s;
+}
+
+#page2{transform:translateX(100%);}
+.show{transform:translateX(0)!important;}
+
+.container{
+background:rgba(255,215,0,0.08);
+backdrop-filter:blur(10px);
+padding:40px;
+border-radius:25px;
+box-shadow:0 0 40px rgba(255,215,0,0.5);
+text-align:center;
+width:85%;
+max-width:420px;
+}
+
+h1{margin-bottom:20px;}
+
+button{
+background:gold;
+border:none;
+padding:12px 28px;
+border-radius:25px;
+cursor:pointer;
+font-size:16px;
+transition:.3s;
+}
+button:hover{background:#ffd700;transform:scale(1.05);}
+
+.countdown{margin:15px 0;font-weight:bold;}
+
+/* الهلال */
+.moon{
+position:absolute;
+top:40px;
+left:50%;
+transform:translateX(-50%);
+width:120px;
+animation:floatMoon 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatMoon{
+from{transform:translateX(-50%) translateY(0);}
+to{transform:translateX(-50%) translateY(20px);}
+}
+
+/* فوانيس الأركان */
+.lantern{
+position:absolute;
+width:80px;
+animation:glow 2s infinite alternate;
+}
+.top-left{top:10px;left:10px;}
+.top-right{top:10px;right:10px;}
+.bottom-left{bottom:10px;left:10px;}
+.bottom-right{bottom:10px;right:10px;}
+
+@keyframes glow{
+from{filter:drop-shadow(0 0 5px gold);}
+to{filter:drop-shadow(0 0 25px gold);}
+}
+
+/* عناصر طايرة */
+.floating{
+position:absolute;
+font-size:28px;
+animation:moveHorizontal linear infinite;
+}
+
+@keyframes moveHorizontal{
+from{transform:translateX(-10vw);}
+to{transform:translateX(110vw);}
+}
+
+.page2-img{
+width:180px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 0 20px gold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- الهلال SVG -->
+<svg class="moon" viewBox="0 0 100 100">
+<circle cx="50" cy="50" r="40" fill="gold"/>
+<circle cx="65" cy="45" r="40" fill="#000814"/>
+</svg>
+
+<!-- فوانيس SVG في الأركان -->
+<svg class="lantern top-left" viewBox="0 0 64 128">
+<rect x="20" y="10" width="24" height="80" rx="12" fill="gold"/>
+<circle cx="32" cy="50" r="18" fill="#fff3b0"/>
+</svg>
+
+<svg class="lantern top-right" viewBox="0 0 64 128">
+<rect x="20" y="10" width="24" height="80" rx="12" fill="gold"/>
+<circle cx="32" cy="50" r="18" fill="#fff3b0"/>
+</svg>
+
+<svg class="lantern bottom-left" viewBox="0 0 64 128">
+<rect x="20" y="10" width="24" height="80" rx="12" fill="gold"/>
+<circle cx="32" cy="50" r="18" fill="#fff3b0"/>
+</svg>
+
+<svg class="lantern bottom-right" viewBox="0 0 64 128">
+<rect x="20" y="10" width="24" height="80" rx="12" fill="gold"/>
+<circle cx="32" cy="50" r="18" fill="#fff3b0"/>
+</svg>
+
+<!-- الصفحة الأولى -->
+<div class="page" id="page1">
+<div class="container">
+<h1>وانما نطعمكم لوجه الله 🌙✨</h1>
+<div class="countdown" id="countdown"></div>
+<button onclick="goToPage2()">رمضان جانا يعم</button>
+</div>
+</div>
+
+<!-- الصفحة التانية -->
+<div class="page" id="page2">
+<div class="container">
+
+<!-- حط صورتك هنا -->
+<img src="image.jpg" class="page2-img">
+
+<h1>تدعوكم الحاجه ام عبده 🌙</h1>
+<p>
+دعونا نعبئ الكرش سوا ✨<br>
+اكيد في الصيام شقيانين وللفطار مشتاقين وعشان كده ي قمامير فطار سنوي جماعي لذيذ والعنوان مش بعيد يوم ١٤ مارس يوم السبت قبل العيد
+</p>
+
+</div>
+</div>
+
+<!-- أغنية رمضان -->
+<audio id="bgMusic" loop>
+<source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- صوت فانوس -->
+<audio id="lanternSound">
+<source src="lantern.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// منع السوايب تماماً
+document.addEventListener('touchstart', function(e) {
+    // منع السحب الأفقي فقط مع السماح بالتمرير الرأسي
+    if (Math.abs(e.touches[0].clientX - e.touches[0].screenX) > 10) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+document.addEventListener('touchmove', function(e) {
+    // منع أي حركة أفقية
+    e.preventDefault();
+}, { passive: false });
+
+// منع السحب بالماوس برضه
+document.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener('mousemove', function(e) {
+    e.preventDefault();
+});
+
+function goToPage2(){
+document.getElementById("page2").classList.add("show");
+document.getElementById("bgMusic").play();
+}
+
+/* Countdown */
+const targetDate = new Date("March 14, 2026 00:00:00").getTime();
+const countdownElement = document.getElementById("countdown");
+
+function updateCountdown(){
+const now = new Date().getTime();
+const distance = targetDate - now;
+
+if(distance<0){
+countdownElement.innerHTML="✨ الفطار وصل ✨";
+return;
+}
+
+const days=Math.floor(distance/(1000*60*60*24));
+const hours=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+const minutes=Math.floor((distance%(1000*60*60))/(1000*60));
+const seconds=Math.floor((distance%(1000*60))/1000);
+
+countdownElement.innerHTML=
+days+" Days "+hours+" Hours "+minutes+" Minutes "+seconds+" Seconds 🌙";
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* نجوم */
+for(let i=0;i<100;i++){
+let star=document.createElement("div");
+star.classList.add("star");
+star.style.top=Math.random()*100+"vh";
+star.style.left=Math.random()*100+"vw";
+star.style.animationDuration=(Math.random()*3+1)+"s";
+document.body.appendChild(star);
+}
+
+/* عناصر طايرة */
+setInterval(()=>{
+const item=document.createElement("div");
+item.classList.add("floating");
+item.innerHTML=Math.random()>0.5?"🏮":"🌙";
+item.style.top=Math.random()*100+"vh";
+item.style.animationDuration=(Math.random()*10+10)+"s";
+document.body.appendChild(item);
+document.getElementById("lanternSound").play();
+setTimeout(()=>item.remove(),20000);
+},1500);
+</script>
+
+</body>
+</html>
